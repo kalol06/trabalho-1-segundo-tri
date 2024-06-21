@@ -1,0 +1,113 @@
+const caixaPrincipal = document.querySelector(".caixa-principal");
+const caixaPerguntas = document.querySelector(".caixa-perguntas");
+const caixaAlternativas = document.querySelector(".caixa-alternativas");
+const caixaResultado = document.querySelector(".caixa-resultado");
+const textoResultado = document.querySelector(".texto-resultado");
+
+const perguntas = [
+    {
+        enunciado: "ASSIM QUE SAIU DA ESCOLA VOCÊ SE DEPARA COM UMA NOVA TECNOLOGIA, UM CHAT QUE CONSEGUE RESPONDER TODAS AS DÚVIDAS QUE UMA PESSOA PODE TER, ELE TAMBÉM GERA IMAGENS E ÁUDIOS HIPER-REALISTAS. QUAL O PRIMEIRO PENSAMENTO?",
+        alternativas: [
+            {
+                texto: "ISSO É ASSUSTADOR!",
+                afirmacao: "NO INÍCIO FICOU COM MEDO DO QUE ESSA TECNOLOGIA PODE FAZER. "
+            },
+            {
+                texto: "ISSO É MARAVILHOSO!",
+                afirmacao: "QUIS SABER COMO USAR IA NO SEU DIA A DIA."
+            }
+        ]
+    },
+    {
+        enunciado: "COM A DESCOBERTA DESTA TECNOLOGIA, CHAMADA INTELIGÊNCIA ARTIFICIAL, UMA PROFESSORA DE TECNOLOGIA DA ESCOLA DECIDIU FAZER UMA SEQUÊNCIA DE AULAS SOBRE ESTA TECNOLOGIA. NO FIM DE UMA AULA ELA PEDE QUE VOCÊ ESCREVA UM TRABALHO SOBRE O USO DE IA EM SALA DE AULA. QUAL ATITUDE VOCÊ TOMA?",
+        alternativas: [
+            {
+                texto: "UTILIZA UMA FERRAMENTA DE BUSCA NA INTERNET QUE UTILIZA IA PARA QUE ELA AJUDE A ENCONTRAR INFORMAÇÕES RELEVANTES PARA O TRABALHO E EXPLIQUE NUMA LINGUAGEM QUE FACILITE O ENTENDIMENTO.",
+                afirmacao: "CONSEGUIU UTILIZAR A IA PARA BUSCAR INFORMAÇÕES ÚTEIS."
+            },
+            {
+                texto: "ESCREVE O TRABALHO COM BASE NAS CONVERSAS QUE TEVE COM COLEGAS, ALGUMAS PESQUISAS NA INTERNET E CONHECIMENTOS PRÓPRIOS SOBRE O TEMA.",
+                afirmacao: "SENTIU MAIS FACILIDADE EM UTILIZAR SEUS PRÓPRIOS RECURSOS PARA ESCREVER SEU TRABALHO."
+            }
+        ]
+    },
+    {
+        enunciado: "APÓS A ELABORAÇÃO DO TRABALHO ESCRITO, A PROFESSORA REALIZOU UM DEBATE ENTRE A TURMA PARA ENTENDER COMO FOI REALIZADA A PESQUISA E ESCRITA. NESSA CONVERSA TAMBÉM FOI LEVANTADO UM PONTO MUITO IMPORTANTE: COMO A IA IMPACTA O TRABALHO DO FUTURO. NESSE DEBATE, COMO VOCÊ SE POSICIONA?",
+        alternativas: [
+            {
+                texto: "DEFENDE A IDEIA DE QUE A IA PODE CRIAR NOVAS OPORTUNIDADES DE EMPREGO E MELHORAR HABILIDADES HUMANAS.",
+                afirmacao: "VEM IMPULSIONANDO A INOVAÇÃO NA ÁREA DE IA E LUTA PARA ABRIR NOVOS CAMINHOS PROFISSIONAIS COM IA."
+            },
+            {
+                texto: "ME PREOCUPO COM AS PESSOAS QUE PERDERÃO SEUS EMPREGOS PARA MÁQUINAS E DEFENDEM A IMPORTÂNCIA DE PROTEGER OS TRABALHADORES.",
+                afirmacao: "SUA PREOCUPAÇÃO COM AS PESSOAS MOTIVOU A CRIAR UM GRUPO DE ESTUDOS ENTRE TRABALHADORES PARA DISCUTIR MEIOS DE UTILIZAÇÃO DE IA DE FORMA ÉTICA."
+            }
+        ]
+    },
+    {
+        enunciado: "AO FINAL DA DISCUSSÃO, VOCÊ PRECISOU CRIAR UMA IMAGEM NO COMPUTADOR QUE REPRESENTASSE O QUE PENSA SOBRE IA. E AGORA?",
+        alternativas: [
+            {
+                texto: "CRIAR UMA IMAGEM UTILIZANDO UMA PLATAFORMA DE DESIGN COMO O PAINT.",
+                afirmacao: "NOTOU TAMBÉM QUE MUITAS PESSOAS NÃO SABEM AINDA UTILIZAR AS FERRAMENTAS TRADICIONAIS E DECIDIU COMPARTILHAR SEUS CONHECIMENTOS DE DESIGN UTILIZANDO FERRAMENTAS DE PINTURA DIGITAL PARA INICIANTES."
+            },
+            {
+                texto: "CRIAR UMA IMAGEM UTILIZANDO UM GERADOR DE IMAGEM DE IA.",
+                afirmacao: "ACELEROU O PROCESSO DE CRIAÇÃO DE TRABALHOS UTILIZANDO GERADORES DE IMAGEM E AGORA CONSEGUE ENSINAR PESSOAS QUE SENTEM DIFICULDADES EM DESENHAR MANUALMENTE COMO UTILIZAR TAMBÉM!"
+            }
+        ]
+    },
+    {
+        enunciado: "VOCÊ TEM UM TRABALHO EM GRUPO DE BIOLOGIA PARA ENTREGAR NA SEMANA SEGUINTE, O ANDAMENTO DO TRABALHO ESTÁ UM POUCO ATRASADO E UMA PESSOA DO SEU GRUPO DECIDIU FAZER COM AJUDA DA IA. O PROBLEMA É QUE O TRABALHO ESTÁ TOTALMENTE IGUAL AO DO CHAT. O QUE VOCÊ FAZ? ",
+        alternativas: [
+            {
+                texto: "ESCREVER COMANDOS PARA O CHAT É UMA FORMA DE CONTRIBUIR COM O TRABALHO, POR ISSO NÃO É UM PROBLEMA UTILIZAR O TEXTO INTEIRO.",
+                afirmacao: "INFELIZMENTE PASSOU A UTILIZAR A IA PARA FAZER TODAS SUAS TAREFAS E AGORA SE SENTE DEPENDENTE DA IA PARA TUDO."
+            },
+            {
+                texto: "O CHAT PODE SER UMA TECNOLOGIA MUITO AVANÇADA, MAS É PRECISO MANTER A ATENÇÃO POIS TODA MÁQUINA ERRA, POR ISSO REVISAR O TRABALHO E CONTRIBUIR COM AS PERSPECTIVAS PESSOAIS É ESSENCIAL.",
+                afirmacao: "PERCEBEU QUE TODA IA REPRODUZ ORIENTAÇÕES BASEADAS NA EMPRESA QUE PROGRAMOU E MUITO DO QUE O CHAT ESCREVIA NÃO REFLETIA O QUE PENSAVA E POR ISSO SABE QUE OS TEXTOS GERADOS PELA IA DEVEM SERVIR COMO AUXÍLIO E NÃO RESULTADO FINAL. "
+            }
+        ]
+    },
+];
+
+
+let atual = 0;
+let perguntaAtual;
+let historiaFinal = "";
+
+function mostraPergunta() {
+    if (atual >= perguntas.length) {
+        mostraResultado();
+        return;
+    }
+    perguntaAtual = perguntas[atual];
+    caixaPerguntas.textContent = perguntaAtual.enunciado;
+    caixaAlternativas.textContent = "";
+    mostraAlternativas();
+}
+
+function mostraAlternativas(){
+    for(const alternativa of perguntaAtual.alternativas) {
+        const botaoAlternativas = document.createElement("button");
+        botaoAlternativas.textContent = alternativa.texto;
+        botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
+        caixaAlternativas.appendChild(botaoAlternativas);
+    }
+}
+
+function respostaSelecionada(opcaoSelecionada) {
+    const afirmacoes = opcaoSelecionada.afirmacao;
+    historiaFinal += afirmacoes + " ";
+    atual++;
+    mostraPergunta();
+}
+
+function mostraResultado() {
+    caixaPerguntas.textContent = "Em 2050...";
+    textoResultado.textContent = historiaFinal;
+    caixaAlternativas.textContent = "";
+}
+
+mostraPergunta();
